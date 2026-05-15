@@ -8,10 +8,9 @@ import {
   Settings, 
   LogOut, 
   ExternalLink, 
-  Clock, 
+  Clock,
   ChevronRight,
-  Zap,
-  Github
+  Zap
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -23,6 +22,7 @@ const TEMPLATES = [
 ];
 
 export default function DashboardPage() {
+  const router = useRouter();
   const [isWizardOpen, setIsWizardOpen] = useState(false);
   const [sites, setSites] = useState([
     { id: "1", name: "My First Site", repo: "my-first-site", domain: "site.github.io", published: true, lastDeployed: "2 hours ago" }
@@ -134,7 +134,7 @@ export default function DashboardPage() {
                   <div 
                     key={template.id} 
                     className="group cursor-pointer"
-                    onClick={() => router.push(`/dashboard/create/${template.id}`)}
+                    onClick={() => router.push(`/dashboard/create/?templateId=${template.id}`)}
                   >
                     <div className="aspect-[4/3] bg-slate-100 rounded-3xl mb-6 overflow-hidden relative border border-slate-200">
                       <img src={template.image} alt={template.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
@@ -174,7 +174,7 @@ function SiteCard({ site }: any) {
   
   return (
     <div 
-      onClick={() => router.push(`/dashboard/editor/${site.id}`)}
+      onClick={() => router.push(`/dashboard/editor/?id=${site.id}`)}
       className="bg-white p-6 rounded-[32px] border border-slate-200 hover:border-slate-300 hover:shadow-xl hover:shadow-slate-200/40 transition-all group cursor-pointer"
     >
       <div className="aspect-video bg-slate-50 rounded-2xl mb-6 overflow-hidden relative border border-slate-100">

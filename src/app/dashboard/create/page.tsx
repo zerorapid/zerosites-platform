@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { ChevronLeft, Rocket, Layout, Globe, Check, Loader2 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,13 +11,15 @@ const TEMPLATES = {
   service: { name: "Local Service", image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&auto=format&fit=crop&q=60" },
 };
 
-export default function CreateSitePage({ params }: { params: Promise<{ templateId: string }> }) {
+export default function CreateSitePage() {
   const [templateId, setTemplateId] = useState<keyof typeof TEMPLATES | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    params.then(p => setTemplateId(p.templateId as any));
-  }, [params]);
+    const searchParams = new URLSearchParams(window.location.search);
+    const tid = searchParams.get("templateId");
+    if (tid) setTemplateId(tid as any);
+  }, []);
 
   const template = templateId ? TEMPLATES[templateId] : null;
 

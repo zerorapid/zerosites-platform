@@ -32,18 +32,21 @@ export async function POST(req: Request) {
     await supabase.from("auth_tokens").update({ used: true }).eq("id", tokenData.id);
 
     // 3. Get or Create User in Supabase Auth
-    const { data: userData, error: userError } = await supabase.auth.admin.getUserByEmail(email);
-    
-    let user;
-    if (userError || !userData.user) {
+    // 3. Check if user exists in our profiles table
+    const { data: profile, error: profileError } = await supabase
+      .from("profiles")
+      .select("*")
+      .eq("email", email)
+      .single();
+
+    let user = profile;
+    if (!user) {
       const { data: newUser, error: createError } = await supabase.auth.admin.createUser({
         email,
         email_confirm: true,
       });
       if (createError) throw createError;
       user = newUser.user;
-    } else {
-      user = userData.user;
     }
 
     // 4. Create Profile if missing

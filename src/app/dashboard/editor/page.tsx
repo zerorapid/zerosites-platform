@@ -16,17 +16,20 @@ import {
   Check,
   Eye,
   Monitor,
-  Smartphone
+  Smartphone,
+  ExternalLink
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function EditorPage({ params }: { params: Promise<{ siteId: string }> }) {
+export default function EditorPage() {
   const [siteId, setSiteId] = useState<string | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    params.then(p => setSiteId(p.siteId));
-  }, [params]);
+    const searchParams = new URLSearchParams(window.location.search);
+    const sid = searchParams.get("id");
+    if (sid) setSiteId(sid);
+  }, []);
   const [activeSection, setActiveSection] = useState("hero");
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [isSaving, setIsSaving] = useState(false);
