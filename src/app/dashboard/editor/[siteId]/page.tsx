@@ -22,14 +22,9 @@ import {
 import { cn } from "@/lib/utils";
 
 export default function EditorPage() {
-  const [siteId, setSiteId] = useState<string | null>(null);
+  const params = useParams();
+  const siteId = params.siteId as string;
   const router = useRouter();
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const sid = searchParams.get("id");
-    if (sid) setSiteId(sid);
-  }, []);
   const [activeSection, setActiveSection] = useState("hero");
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [isSaving, setIsSaving] = useState(false);

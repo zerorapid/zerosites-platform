@@ -12,16 +12,10 @@ const TEMPLATES = {
 };
 
 export default function CreateSitePage() {
-  const [templateId, setTemplateId] = useState<keyof typeof TEMPLATES | null>(null);
+  const params = useParams();
   const router = useRouter();
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const tid = searchParams.get("templateId");
-    if (tid) setTemplateId(tid as any);
-  }, []);
-
-  const template = templateId ? TEMPLATES[templateId] : null;
+  const templateId = params.templateId as keyof typeof TEMPLATES;
+  const template = TEMPLATES[templateId];
 
   const [name, setName] = useState("");
   const [repoName, setRepoName] = useState("");
