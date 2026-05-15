@@ -1,0 +1,54 @@
+name: ZeroSites Deployment Engine
+
+on:
+  repository_dispatch:
+    types: [publish_site]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Deploy to User GitHub
+        env:
+          USER_GH_TOKEN: ${{ github.event.client_payload.user_token }}
+          USER_GH_NAME: ${{ github.event.client_payload.user_name }}
+          REPO_NAME: ${{ github.event.client_payload.repo_name }}
+          TEMPLATE_ID: ${{ github.event.client_payload.template_id }}
+          SITE_CONFIG: ${{ github.event.client_payload.site_config }}
+        run: |
+          echo "Launching site: $REPO_NAME for $USER_GH_NAME"
+          
+          # 1. Create repo from template
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $USER_GH_TOKEN" \
+            https://api.github.com/repos/zerorapid/zerosites-template-$TEMPLATE_ID/generate \
+            -d "{\"name\":\"$REPO_NAME\",\"private\":false,\"include_all_branches\":false}"
+          
+          # Wait for GitHub to initialize
+          sleep 5
+          
+          # 2. Push custom content.json
+          # Get the SHA of the file first
+          SHA=$(curl -L -H "Authorization: Bearer $USER_GH_TOKEN" https://api.github.com/repos/$USER_GH_NAME/$REPO_NAME/contents/content.json | jq -r '.sha')
+          
+          curl -L \
+            -X PUT \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $USER_GH_TOKEN" \
+            https://api.github.com/repos/$USER_GH_NAME/$REPO_NAME/contents/content.json \
+            -d "{\"message\":\"Update from ZeroSites\",\"content\":\"$(echo $SITE_CONFIG | base64)\",\"sha\":\"$SHA\"}"
+          
+          # 3. Enable Pages
+          curl -L \
+            -X POST \
+            -H "Accept: application/vnd.github+json" \
+            -H "Authorization: Bearer $USER_GH_TOKEN" \
+            https://api.github.com/repos/$USER_GH_NAME/$REPO_NAME/pages \
+            -d "{\"source\":{\"branch\":\"main\",\"path\":\"/\"}}"
+          
+          echo "✅ Successfully deployed to https://$USER_GH_NAME.github.io/$REPO_NAME"

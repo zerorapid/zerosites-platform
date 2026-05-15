@@ -1,0 +1,22 @@
+{
+  "name": "ZeroRapid Agency",
+  "content": {
+    "headline": "Creative Solutions for Modern Brands",
+    "subheadline": "We build high-performance digital experiences that help your business grow and succeed in the modern world.",
+    "about": "We are a team of passionate designers, developers, and strategists. Our mission is to transform your ideas into reality using the latest technologies and design principles.",
+    "services": [
+      {
+        "title": "Brand Strategy",
+        "description": "Defining your voice, mission, and visual identity to stand out in a crowded market."
+      },
+      {
+        "title": "Web Development",
+        "description": "Building lightning-fast, responsive websites that convert visitors into loyal customers."
+      }
+    ],
+    "contact": {
+      "email": "hello@zerorapid.in",
+      "phone": "+91 98765 43210"
+    }
+  }
+}

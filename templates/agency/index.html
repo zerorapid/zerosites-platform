@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Website</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        [v-cloak] { display: none; }
+    </style>
+</head>
+<body class="bg-white text-slate-900 scroll-smooth">
+    <div id="app" v-cloak>
+        <!-- Nav -->
+        <nav class="fixed top-0 left-0 right-0 h-20 bg-white/80 backdrop-blur-md z-50 px-6 border-b border-slate-100 flex items-center justify-between">
+            <span class="text-xl font-black italic uppercase tracking-tighter" id="site-name">Loading...</span>
+            <div class="hidden md:flex items-center gap-8 text-sm font-bold text-slate-500 uppercase tracking-widest">
+                <a href="#about" class="hover:text-slate-900 transition-colors">About</a>
+                <a href="#services" class="hover:text-slate-900 transition-colors">Services</a>
+                <a href="#contact" class="hover:text-slate-900 transition-colors">Contact</a>
+            </div>
+            <a href="#contact" class="bg-slate-900 text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-widest hover:scale-105 transition-transform">Get Started</a>
+        </nav>
+
+        <!-- Hero -->
+        <section class="min-h-screen flex flex-col items-center justify-center text-center p-10 pt-32 bg-slate-50 relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5"></div>
+            <div class="relative z-10 max-w-4xl mx-auto space-y-8">
+                <h1 class="text-5xl md:text-7xl font-black tracking-tight text-slate-900 leading-tight" id="hero-headline">...</h1>
+                <p class="text-xl text-slate-500 font-medium leading-relaxed max-w-2xl mx-auto" id="hero-subheadline">...</p>
+                <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                    <button class="bg-slate-900 text-white px-10 py-5 rounded-2xl font-bold text-lg shadow-xl shadow-slate-900/20 hover:-translate-y-1 transition-all">Launch Your Project</button>
+                    <button class="px-10 py-5 rounded-2xl font-bold text-lg text-slate-400 hover:text-slate-900 transition-colors">View Portfolio</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- About -->
+        <section id="about" class="py-32 px-10 max-w-5xl mx-auto">
+            <div class="grid md:grid-cols-2 gap-20 items-center">
+                <div class="space-y-6">
+                    <h2 class="text-4xl font-black tracking-tight">Our Story</h2>
+                    <p class="text-xl text-slate-500 leading-relaxed font-medium" id="about-content">...</p>
+                </div>
+                <div class="aspect-square bg-slate-100 rounded-[40px] overflow-hidden">
+                    <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1000&auto=format&fit=crop&q=80" class="w-full h-full object-cover">
+                </div>
+            </div>
+        </section>
+
+        <!-- Services -->
+        <section id="services" class="py-32 px-10 bg-slate-50">
+            <div class="max-w-6xl mx-auto">
+                <div class="text-center mb-20 space-y-4">
+                    <h2 class="text-4xl font-black tracking-tight">Core Services</h2>
+                    <p class="text-slate-500 font-medium">Everything you need to scale your brand.</p>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8" id="services-grid">
+                    <!-- Dynamic Services -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact -->
+        <section id="contact" class="py-32 px-10 text-center">
+            <div class="max-w-3xl mx-auto space-y-12">
+                <h2 class="text-4xl font-black tracking-tight">Ready to build?</h2>
+                <div class="flex flex-col items-center gap-6 text-2xl font-bold text-slate-600">
+                    <a id="contact-email" class="hover:text-slate-900">...</a>
+                    <p id="contact-phone">...</p>
+                </div>
+                <p class="text-slate-400 text-sm italic pt-10">Built with <span class="text-slate-900 font-bold">ZeroSites</span> by ZeroRapid</p>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Simple Hydration Logic
+        async function init() {
+            try {
+                const res = await fetch('content.json');
+                const config = await res.json();
+
+                document.getElementById('site-name').innerText = config.name || 'Business Name';
+                document.getElementById('hero-headline').innerText = config.content.headline;
+                document.getElementById('hero-subheadline').innerText = config.content.subheadline;
+                document.getElementById('about-content').innerText = config.content.about;
+                document.getElementById('contact-email').innerText = config.content.contact.email;
+                document.getElementById('contact-phone').innerText = config.content.contact.phone;
+
+                const grid = document.getElementById('services-grid');
+                config.content.services.forEach(service => {
+                    const el = document.createElement('div');
+                    el.className = 'bg-white p-12 rounded-[40px] border border-slate-100 shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all';
+                    el.innerHTML = `
+                        <h3 class="text-2xl font-bold mb-4 text-slate-900">${service.title}</h3>
+                        <p class="text-slate-500 leading-relaxed font-medium">${service.description}</p>
+                    `;
+                    grid.appendChild(el);
+                });
+
+                document.body.style.display = 'block';
+            } catch (err) {
+                console.error('Failed to load content:', err);
+            }
+        }
+        init();
+    </script>
+</body>
+</html>
