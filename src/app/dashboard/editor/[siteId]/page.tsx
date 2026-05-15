@@ -20,9 +20,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-export default function EditorPage() {
-  const params = useParams();
+export default function EditorPage({ params }: { params: Promise<{ siteId: string }> }) {
+  const [siteId, setSiteId] = useState<string | null>(null);
   const router = useRouter();
+
+  useEffect(() => {
+    params.then(p => setSiteId(p.siteId));
+  }, [params]);
   const [activeSection, setActiveSection] = useState("hero");
   const [viewport, setViewport] = useState<"desktop" | "mobile">("desktop");
   const [isSaving, setIsSaving] = useState(false);
@@ -64,9 +68,10 @@ export default function EditorPage() {
   const [publishResult, setPublishResult] = useState<{ url: string } | null>(null);
 
   const handlePublish = async () => {
+    if (!siteId) return;
     setIsPublishing(true);
     try {
-      const res = await fetch(`/api/sites/publish/${params.siteId}`, { method: "POST" });
+      const res = await fetch(`/api/sites/publish/${siteId}`, { method: "POST" });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Publishing failed");
       setPublishResult(data);

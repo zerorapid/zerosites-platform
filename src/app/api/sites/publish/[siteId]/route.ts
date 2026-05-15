@@ -7,9 +7,9 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-export async function POST(req: Request, { params }: { params: { siteId: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ siteId: string }> }) {
   try {
-    const siteId = params.siteId;
+    const { siteId } = await params;
 
     // 1. Get current user & site config
     const cookieStore = await cookies();

@@ -11,11 +11,15 @@ const TEMPLATES = {
   service: { name: "Local Service", image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&auto=format&fit=crop&q=60" },
 };
 
-export default function CreateSitePage() {
-  const params = useParams();
+export default function CreateSitePage({ params }: { params: Promise<{ templateId: string }> }) {
+  const [templateId, setTemplateId] = useState<keyof typeof TEMPLATES | null>(null);
   const router = useRouter();
-  const templateId = params.templateId as keyof typeof TEMPLATES;
-  const template = TEMPLATES[templateId];
+
+  useEffect(() => {
+    params.then(p => setTemplateId(p.templateId as any));
+  }, [params]);
+
+  const template = templateId ? TEMPLATES[templateId] : null;
 
   const [name, setName] = useState("");
   const [repoName, setRepoName] = useState("");
@@ -51,7 +55,7 @@ export default function CreateSitePage() {
     }
   };
 
-  if (!template) return <div>Template not found</div>;
+  if (!template) return <div className="min-h-screen bg-white flex items-center justify-center font-bold text-slate-400">Loading template...</div>;
 
   return (
     <div className="min-h-screen bg-[#F8FAFC]">
