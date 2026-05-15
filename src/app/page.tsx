@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Rocket, Zap, Shield, Globe, ArrowRight, Github } from "lucide-react";
+import { Rocket, Zap, Shield, Globe, ArrowRight } from "lucide-react";
 
 export default function Home() {
   return (
@@ -108,7 +108,7 @@ export default function Home() {
           © 2026 ZeroSites Platform. Powered by GitHub Pages.
         </div>
         <div className="flex items-center gap-6 text-slate-400">
-          <Github className="w-5 h-5 hover:text-slate-900 transition-colors cursor-pointer" />
+          <Globe className="w-5 h-5 hover:text-slate-900 transition-colors cursor-pointer" />
         </div>
       </footer>
     </div>
